@@ -2,7 +2,7 @@ use super::locale::current_locale;
 use crate::color::{ColoredString, Colors, Elem};
 use crate::flags::{DateFlag, Flags};
 use chrono::{DateTime, Duration, Local};
-use chrono_humanize::HumanTime;
+use chrono_humanize::{Accuracy, HumanTime, Tense};
 use std::fs::Metadata;
 use std::panic;
 use std::time::SystemTime;
@@ -49,7 +49,9 @@ impl Date {
             match &flags.date {
                 DateFlag::Date => val.format("%c").to_string(),
                 DateFlag::Locale => val.format_localized("%c", locale).to_string(),
-                DateFlag::Relative => HumanTime::from(*val - Local::now()).to_string(),
+                DateFlag::Relative => {
+                    HumanTime::from(*val - Local::now()).to_text_en(Accuracy::Rough, Tense::Present)
+                }
                 DateFlag::Iso => {
                     // 365.2425 * 24 * 60 * 60 = 31556952 seconds per year
                     // 15778476 seconds are 6 months
