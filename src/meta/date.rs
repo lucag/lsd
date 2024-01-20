@@ -218,7 +218,7 @@ mod test {
         };
 
         assert_eq!(
-            "2 days ago".to_string().with(Color::AnsiValue(36)),
+            "2 days".to_string().with(Color::AnsiValue(36)),
             date.render(&colors, &flags)
         );
 
