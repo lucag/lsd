@@ -23,7 +23,7 @@
 **IMPORTANT**: This is the development documents,
 please check the docs in [Tags](https://github.com/lsd-rs/lsd/tags) if you installed from the released ones.
 
-The current newest release is: [v1.0.0](https://github.com/lsd-rs/lsd/tree/v1.0.0)
+The current newest release is: [v1.1.1](https://github.com/lsd-rs/lsd/tree/v1.1.1)
 
 ---
 
@@ -102,16 +102,21 @@ Check [Config file content](#config-file-content) for details.
 
 On non-Windows systems `lsd` follows the
 [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
-convention for the location of the configuration file. The configuration dir
-`lsd` uses is itself named `lsd`. In that directory it looks first for a file
-called `config.yaml`.
-For most people it should be enough to put their config file at
-`~/.config/lsd/config.yaml`.
+convention for the location of the configuration file. A `config.yaml` or `config.yml` file will be searched for in these locations, in order:
+
+- `$HOME/.config/lsd`
+- `$XDG_CONFIG_HOME/lsd`
+
+On most systems these are mapped to the same location, which is `~/.config/lsd/config.yaml`.
 
 ### Windows
 
-On Windows systems `lsd` only looks for the `config.yaml` files in one location:
-`%APPDATA%\lsd\`
+On Windows systems `lsd` searches for `config.yaml` or `config.yml` in the following locations, in order:
+
+- `%USERPROFILE%\.config\lsd`
+- `%APPDATA%\lsd`
+
+These are usually something like `C:\Users\username\AppData\Roaming\lsd\config.yaml` and `C:\Users\username\.config\lsd\config.yaml` respectively.
 
 ### Custom
 
@@ -160,7 +165,7 @@ color:
 # This specifies the date format for the date column. The freeform format
 # accepts a strftime like string.
 # When "classic" is set, this is set to "date".
-# Possible values: date, relative, '+<date_format>'
+# Possible values: date, locale, relative, '+<date_format>'
 # `date_format` will be a `strftime` formatted value. e.g. `date: '+%d %b %y %X'` will give you a date like this: 17 Jun 21 20:14:55
 date: date
 
@@ -219,8 +224,8 @@ size: default
 
 # == Permission ==
 # Specify the format of the permission column
-# Possible value: rwx, octal
-permission: rwx
+# Possible value: rwx, octal, attributes (windows only), disabled
+# permission: rwx
 
 # == Sorting ==
 sorting:

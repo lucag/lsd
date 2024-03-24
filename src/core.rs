@@ -1,8 +1,7 @@
 use crate::color::Colors;
 use crate::display;
 use crate::flags::{
-    ColorOption, Display, Flags, HyperlinkOption, Layout, Literal, PermissionFlag, SortOrder,
-    ThemeOption,
+    ColorOption, Display, Flags, HyperlinkOption, Layout, Literal, SortOrder, ThemeOption,
 };
 use crate::git::GitCache;
 use crate::icon::Icons;
@@ -105,19 +104,24 @@ impl Core {
             _ => 1,
         };
 
+        #[cfg(target_os = "windows")]
+        use crate::config_file;
+        #[cfg(target_os = "windows")]
+        let paths: Vec<PathBuf> = paths
+            .into_iter()
+            .filter_map(config_file::expand_home)
+            .collect();
+
         for path in paths {
-            let mut meta = match Meta::from_path(
-                &path,
-                self.flags.dereference.0,
-                self.flags.permission == PermissionFlag::Disable,
-            ) {
-                Ok(meta) => meta,
-                Err(err) => {
-                    print_error!("{}: {}.", path.display(), err);
-                    exit_code.set_if_greater(ExitCode::MajorIssue);
-                    continue;
-                }
-            };
+            let mut meta =
+                match Meta::from_path(&path, self.flags.dereference.0, self.flags.permission) {
+                    Ok(meta) => meta,
+                    Err(err) => {
+                        print_error!("{}: {}.", path.display(), err);
+                        exit_code.set_if_greater(ExitCode::MajorIssue);
+                        continue;
+                    }
+                };
 
             let cache = if self.flags.blocks.0.contains(&Block::GitStatus) {
                 Some(GitCache::new(&path))

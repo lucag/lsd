@@ -34,6 +34,7 @@ impl From<&Metadata> for Date {
 impl Date {
     pub fn render(&self, colors: &Colors, flags: &Flags) -> ColoredString {
         let now = Local::now();
+        #[allow(deprecated)]
         let elem = match self {
             &Date::Date(modified) if modified > now - Duration::hours(1) => Elem::HourOld,
             &Date::Date(modified) if modified > now - Duration::days(1) => Elem::DayOld,
@@ -46,6 +47,7 @@ impl Date {
         let locale = current_locale();
 
         if let Date::Date(val) = self {
+            #[allow(deprecated)]
             match &flags.date {
                 DateFlag::Date => val.format("%c").to_string(),
                 DateFlag::Locale => val.format_localized("%c", locale).to_string(),
@@ -121,6 +123,7 @@ mod test {
         let mut file_path = env::temp_dir();
         file_path.push("test_an_hour_old_file_color.tmp");
 
+        #[allow(deprecated)]
         let creation_date = Local::now() - chrono::Duration::seconds(4);
 
         let success = cross_platform_touch(&file_path, &creation_date)
@@ -148,6 +151,7 @@ mod test {
         let mut file_path = env::temp_dir();
         file_path.push("test_a_day_old_file_color.tmp");
 
+        #[allow(deprecated)]
         let creation_date = Local::now() - chrono::Duration::hours(4);
 
         let success = cross_platform_touch(&file_path, &creation_date)
@@ -175,6 +179,7 @@ mod test {
         let mut file_path = env::temp_dir();
         file_path.push("test_a_several_days_old_file_color.tmp");
 
+        #[allow(deprecated)]
         let creation_date = Local::now() - chrono::Duration::days(2);
 
         let success = cross_platform_touch(&file_path, &creation_date)
@@ -202,6 +207,7 @@ mod test {
         let mut file_path = env::temp_dir();
         file_path.push("test_with_relative_date.tmp");
 
+        #[allow(deprecated)]
         let creation_date = Local::now() - chrono::Duration::days(2);
 
         let success = cross_platform_touch(&file_path, &creation_date)
@@ -287,6 +293,7 @@ mod test {
         let mut file_path = env::temp_dir();
         file_path.push("test_iso_format_year_old.tmp");
 
+        #[allow(deprecated)]
         let creation_date = Local::now() - Duration::days(400);
         let success = cross_platform_touch(&file_path, &creation_date)
             .unwrap()
